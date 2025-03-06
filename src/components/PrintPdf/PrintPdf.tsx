@@ -18,7 +18,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
         <Image src={logo} style={styles.logo} />
         <View style={[styles.section, styles.mtLarge]}>
           <Text style={styles.header1}>ORIENTAČNÍ ROZPOČET</Text>
-          <Text style={styles.redSubheader}>,,RENOVUJEME DOMOV PRO LEPŠÍ ŽIVOT’’</Text>
+          <Text style={styles.redSubheader}> </Text>
         </View>
         <View style={styles.section}>
           <View style={[styles.row, styles.mbMedium]}>
