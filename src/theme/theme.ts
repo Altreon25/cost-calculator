@@ -1,6 +1,6 @@
 import { outlinedInputClasses } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
-import { EColors } from './helpers';
+import { EColors } from '../assets/colors';
 
 // 🎨 Define Global Theme
 const theme = createTheme({

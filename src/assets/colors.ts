@@ -1,4 +1,4 @@
 export enum EColors {
-  primary = '#FF0000',
+  primary = '#00bafe',
   secondary = '#333333',
 }
