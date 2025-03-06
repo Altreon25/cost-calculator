@@ -1,4 +1,5 @@
 import { StyleSheet, Font } from '@react-pdf/renderer';
+import { EColors } from '../../assets/colors';
 
 Font.register({
   family: 'Roboto',
@@ -43,7 +44,7 @@ export const styles = StyleSheet.create({
   },
   box: {
     border: 1,
-    borderColor: '#ff0000',
+    borderColor: EColors.primary,
     borderRadius: 8,
     minHeight: 18,
   },
@@ -81,9 +82,6 @@ export const styles = StyleSheet.create({
   paddingInlineSmall: {
     padding: '0 5',
   },
-  highlight: {
-    backgroundColor: '#FF06064F',
-  },
   width70: {
     width: 70,
   },
@@ -102,14 +100,17 @@ export const styles = StyleSheet.create({
   },
   redSubheader: {
     fontSize: 12,
-    color: '#FF03072B',
+    color: EColors.primary,
     textAlign: 'center',
   },
   logo: {
     width: 130,
+    height: 60,
     position: 'absolute',
     left: 20,
     top: 20,
+    objectFit: 'contain',
+    objectPosition: 'center',
   },
   flex1: {
     flex: 1,

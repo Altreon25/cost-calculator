@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Container, Button, Grid } from '@mui/material';
 import { FormOdpb } from './components/FormOdpb';
 import { FormShape } from './types';
+import { PDFViewer } from '@react-pdf/renderer';
+import { PrintPdf } from './components/PrintPdf/PrintPdf';
 
 function App() {
   const [activeTab, setActiveTab] = useState('odpb');
@@ -76,11 +78,11 @@ function App() {
           )}
         </Grid>
 
-        {/* <Grid item xs={12}>
+        <Grid item xs={12}>
           <PDFViewer width="100%" height={1200}>
             <PrintPdf formValues={formValues} />
           </PDFViewer>
-        </Grid> */}
+        </Grid>
       </Grid>
     </Container>
   );
