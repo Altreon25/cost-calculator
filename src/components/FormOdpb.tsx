@@ -475,11 +475,12 @@ export const FormOdpb = ({
 
         <Grid item xs={3}>
           <NumberInput
-            label="Navýšení rozpočtu"
+            label="Úprava rozpočtu"
             name="customCost"
             value={formValues.customCost}
             onChange={handleInputChange}
             suffix=",-"
+            allowNegative
           />
         </Grid>
         <Grid item xs={3}>

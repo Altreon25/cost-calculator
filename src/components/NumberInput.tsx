@@ -10,6 +10,7 @@ interface NumberInputProps {
   placeholder?: string;
   suffix?: string;
   readonly?: boolean;
+  allowNegative?: boolean;
 }
 
 const NumberInput: React.FC<NumberInputProps> = ({
@@ -20,6 +21,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
   placeholder,
   suffix,
   readonly,
+  allowNegative = false,
 }) => {
   return (
     <NumericFormat
@@ -38,7 +40,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
       valueIsNumericString
       thousandSeparator="." // Formats number as "000.000"
       decimalSeparator=","
-      allowNegative={false} // Prevents negative numbers
+      allowNegative={allowNegative} // Prevents negative numbers
       decimalScale={0} // No decimals allowed
       customInput={TextField}
       type="text"
