@@ -4,6 +4,7 @@ export type Option = {
   printLabel: string;
   cost?: number;
   subsidy?: number;
+  tigoSubsidy?: number;
 };
 
 export const vytapeniOptions: Option[] = [
@@ -49,8 +50,8 @@ export const vytapeniOptions: Option[] = [
   },
   {
     value: '4',
-    label: 'TNG 15 kW 302.336,-',
-    printLabel: 'TNG 15 kW + 7,5 kW bivalentní zdroj',
+    label: 'TNG 20 kW 302.336,-',
+    printLabel: 'TNG 20 kW + 7,5 kW bivalentní zdroj',
     cost: 302336,
     subsidy: 75000,
   },
@@ -84,8 +85,8 @@ export const vytapeniOptions: Option[] = [
   },
   {
     value: '9',
-    label: 'TNG-15 kW + 200l bojler na ohřev vody 348.195,-',
-    printLabel: 'TNG-15 kW + 200l bojler na ohřev vody',
+    label: 'TNG-20 kW + 200l bojler na ohřev vody 348.195,-',
+    printLabel: 'TNG-20 kW + 200l bojler na ohřev vody',
     cost: 348195,
     subsidy: 90000,
   },
@@ -119,8 +120,8 @@ export const vytapeniOptions: Option[] = [
   },
   {
     value: '14',
-    label: '15 kW kombi (bojler 250l, AKU 130l) 379.655,-',
-    printLabel: '15 kW kombi (bojler 250l, AKU 130l)',
+    label: '20 kW kombi (bojler 250l, AKU 130l) 379.655,-',
+    printLabel: '20 kW kombi (bojler 250l, AKU 130l)',
     cost: 379655,
     subsidy: 90000,
   },
@@ -154,8 +155,8 @@ export const vytapeniOptions: Option[] = [
   },
   {
     value: '19',
-    label: '15 kW + 200l bojler na ohřev vody + AKU 200l na vytápění 391.634,-',
-    printLabel: '15 kW + 200l na ohřev vody + AKU 200l na vytápění',
+    label: '20 kW + 200l bojler na ohřev vody + AKU 200l na vytápění 391.634,-',
+    printLabel: '20 kW + 200l na ohřev vody + AKU 200l na vytápění',
     cost: 391634,
     subsidy: 90000,
   },
@@ -244,35 +245,33 @@ export const solaryOptions: Option[] = [
     value: '',
     label: 'Vyberte variantu',
     printLabel: 'Vyberte variantu',
+    tigoSubsidy: 0,
   },
   {
     value: 318458,
     label: '4,45 kWp 10x Trina, střídač Solax 10 kW, baterie Solax 11,6 kWh',
     printLabel: '4,45 kWp, Solax 10 kW + 11,6 kWh',
+    tigoSubsidy: 16500,
   },
   {
     value: 340308,
     label: '6,23 kWp 14x Trina, střídač Solax 10 kW, baterie Solax 11,6 kWh',
     printLabel: '6,23 kWp, Solax 10 kW + 11,6 kWh',
+    tigoSubsidy: 19800,
   },
   {
     value: 357558,
     label: '8,01 kWp 18x Trina, střídač Solax 10 kW, baterie Solax 11,6 kWh',
     printLabel: '8,01 kWp, Solax 10 kW + 11,6 kWh',
+    tigoSubsidy: 24200,
   },
   {
     value: 379408,
     label: '9,79 kWp 22x Trina, střídač Solax 10 kW, baterie Solax 11,6 kWh',
     printLabel: '9,79 kWp, Solax 10 kW + 11,6 kWh',
+    tigoSubsidy: 30800,
   },
 ];
-
-export const tigoSubsidy = {
-  '340400': 16500,
-  '362250': 19800,
-  '379500': 24200,
-  '401305': 30800,
-};
 
 export const rekuperaceVzdOptions: Option[] = [
   {

@@ -1,5 +1,5 @@
 import { FormShape } from '../types';
-import { destovkaOptions, tigoSubsidy, vytapeniOptions } from './options';
+import { destovkaOptions, solaryOptions, vytapeniOptions } from './options';
 
 export const CONSTS = {
   maxDotaceA: 1000000,
@@ -40,20 +40,23 @@ export const calculateSubsidy = (formValues: FormShape) => {
   const rekuperaceVodyDotace = formValues.rekuperaceVody ? 50000 : 0;
   const rekuperaceVodyCostClient = rekuperaceVodyTotalCost - rekuperaceVodyDotace;
 
-  const solaryTotalCost = formValues.solary ? parseInt(formValues.solary || '0') : 0;
+  const countTigo = formValues.tigo && formValues.solary;
+  const tigoCost = countTigo
+    ? solaryOptions.find((option) => option.value?.toString() === formValues.solary?.toString())
+        ?.tigoSubsidy ?? 0
+    : 0;
+
+  const solaryTotalCost = formValues.solary ? parseInt(formValues.solary || '0') + tigoCost : 0;
   const solaryDotace = formValues.solary ? 100000 : 0;
-  const solaryCostClient =
-    solaryTotalCost -
-    solaryDotace +
-    (formValues.tigo && formValues.solary
-      ? tigoSubsidy[formValues.solary as keyof typeof tigoSubsidy]
-      : 0);
+
+  const solaryCostClient = solaryTotalCost - solaryDotace;
 
   const wallBoxUnitCost = formValues.nabijeciStanice ? 22000 : 0;
 
   const wallBoxCostClient = wallBoxUnitCost;
 
   const infigyDotace = formValues.infigy ? 40000 : 0;
+  const infigyCostClient = formValues.infigy ? 21000 : 0;
 
   const rekuperaceVzduchuUnitCost = formValues.rekuperaceVzduchu ?? 0;
   const rekuperaceVzduchuDotace =
@@ -77,7 +80,8 @@ export const calculateSubsidy = (formValues: FormShape) => {
     rekuperaceVzduchuCostClient +
     solaryCostClient +
     wallBoxCostClient +
-    vytapeniCostClient;
+    vytapeniCostClient +
+    infigyCostClient;
   const dotaceC =
     rekuperaceVodyDotace + rekuperaceVzduchuDotace + solaryDotace + vytapeniDotace + infigyDotace;
 
@@ -137,9 +141,9 @@ export const calculateSubsidy = (formValues: FormShape) => {
 
   const totalCostClient = Math.max(totalCost - totalDotace, 0);
 
-  newFormValues.costTotalClient = totalCostClient;
-  newFormValues.dotaceTotal = totalDotace;
-  newFormValues.costTotal = totalCost;
+  newFormValues.costTotalClient = Math.round(totalCostClient);
+  newFormValues.dotaceTotal = Math.round(totalDotace);
+  newFormValues.costTotal = Math.round(totalCost);
 
   newFormValues.monthlyPayment = calculateMonthlyPayment(newFormValues);
 
@@ -149,7 +153,7 @@ export const calculateSubsidy = (formValues: FormShape) => {
 const calculateMonthlyPayment = (formValues: FormShape) => {
   const loanAmount = formValues.costTotalClient;
   const interestRate = 0.0299 / 12;
-  const duration = 20;
+  const duration = 25;
   const totalPayments = duration * 12;
 
   let monthlyPayment = 0;
@@ -160,7 +164,7 @@ const calculateMonthlyPayment = (formValues: FormShape) => {
       (Math.pow(1 + interestRate, totalPayments) - 1);
   }
 
-  return monthlyPayment;
+  return Math.round(monthlyPayment);
 };
 
 export const formatNumber = (value: number | string): string => {

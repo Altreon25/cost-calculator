@@ -440,7 +440,6 @@ export const FormOdpb = ({
             name="detiPolovina"
             value={formValues.detiPolovina}
             onChange={handleInputChange}
-            suffix=",-"
           />
         </Grid>
 
