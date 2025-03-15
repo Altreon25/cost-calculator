@@ -26,12 +26,14 @@ export const calculateSubsidy = (formValues: FormShape) => {
     (windowArea + dvereArea) * 4900 +
     shadingArea * 2100;
 
-  const areaSubsidy =
+  const areaSubsidyRaw =
     (pudaArea + sklepArea + stenaArea) * 500 +
     (roofArea + facadeArea) * 1300 +
     floorArea * 1700 +
     (windowArea + dvereArea) * 4900 +
     shadingArea * 1500;
+
+  const areaSubsidy = Math.min(areaSubsidyRaw, CONSTS.maxDotaceA);
 
   const areaTotalCost = areaCostClient + areaSubsidy;
 
@@ -56,7 +58,7 @@ export const calculateSubsidy = (formValues: FormShape) => {
   const wallBoxCostClient = wallBoxUnitCost;
 
   const infigyDotace = formValues.infigy ? 40000 : 0;
-  const infigyCostClient = formValues.infigy ? 21000 : 0;
+  const infigyTotalCostCost = formValues.infigy ? 21000 : 0;
 
   const rekuperaceVzduchuUnitCost = formValues.rekuperaceVzduchu ?? 0;
   const rekuperaceVzduchuDotace =
@@ -81,7 +83,8 @@ export const calculateSubsidy = (formValues: FormShape) => {
     solaryCostClient +
     wallBoxCostClient +
     vytapeniCostClient +
-    infigyCostClient;
+    infigyTotalCostCost;
+
   const dotaceC =
     rekuperaceVodyDotace + rekuperaceVzduchuDotace + solaryDotace + vytapeniDotace + infigyDotace;
 
@@ -90,7 +93,8 @@ export const calculateSubsidy = (formValues: FormShape) => {
     rekuperaceVzduchuTotalCost +
     solaryTotalCost +
     wallBoxUnitCost +
-    vytapeniTotalCost;
+    vytapeniTotalCost +
+    infigyTotalCostCost;
 
   // Oblast D
   const destovkaSelectedOption = destovkaOptions.find(

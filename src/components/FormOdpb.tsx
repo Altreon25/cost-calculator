@@ -471,7 +471,7 @@ export const FormOdpb = ({
             suffix=",-"
           />
         </Grid>
-
+        {/* Only Altreon allow negative true */}
         <Grid item xs={3}>
           <NumberInput
             label="Úprava rozpočtu"
