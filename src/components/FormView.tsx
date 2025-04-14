@@ -454,7 +454,7 @@ export const FormView: FC<FormProps> = ({ formValues, setformValues, activeTab }
             name="kombinacniBonus"
             value={formValues.kombinacniBonus}
             onChange={handleInputChange}
-            readonly
+            readOnly
             suffix=",-"
           />
         </Grid>
@@ -502,7 +502,7 @@ export const FormView: FC<FormProps> = ({ formValues, setformValues, activeTab }
             name="dotaceTotal"
             value={formValues.dotaceTotal}
             onChange={handleInputChange}
-            readonly
+            readOnly
             suffix=",-"
           />
         </Grid>
@@ -513,7 +513,7 @@ export const FormView: FC<FormProps> = ({ formValues, setformValues, activeTab }
             name="costTotal"
             value={formValues.costTotal}
             onChange={handleInputChange}
-            readonly
+            readOnly
             suffix=",-"
           />
         </Grid>
@@ -534,7 +534,7 @@ export const FormView: FC<FormProps> = ({ formValues, setformValues, activeTab }
             name="costTotalClient"
             value={formValues.costTotalClient || (formValues.costTotal && '0')}
             onChange={handleInputChange}
-            readonly
+            readOnly
             suffix=",-"
           />
         </Grid>

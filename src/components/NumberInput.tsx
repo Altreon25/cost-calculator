@@ -9,7 +9,7 @@ interface NumberInputProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   suffix?: string;
-  readonly?: boolean;
+  readOnly?: boolean;
   allowNegative?: boolean;
 }
 
@@ -20,7 +20,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
   onChange,
   placeholder,
   suffix,
-  readonly,
+  readOnly,
   allowNegative = false,
 }) => {
   return (
@@ -43,6 +43,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
       allowNegative={allowNegative} // Prevents negative numbers
       decimalScale={0} // No decimals allowed
       customInput={TextField}
+      slotProps={{ input: { readOnly } }}
       type="text"
       label={label}
       variant="outlined"
@@ -50,7 +51,6 @@ const NumberInput: React.FC<NumberInputProps> = ({
       name={name}
       placeholder={placeholder}
       suffix={suffix}
-      readOnly={readonly}
     />
   );
 };
