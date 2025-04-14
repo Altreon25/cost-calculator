@@ -3,23 +3,37 @@ import { styles } from './styles';
 import { ListItem } from './ListItem';
 import logo from '../../assets/logo.png';
 import { rekuperaceVzdOptions, solaryOptions, vytapeniOptions } from '../options';
-import { FormShape } from '../../types';
-import { CONSTS, formatNumber } from '../methods';
+import { CalculationSets } from '../CalculationConstants';
+import { siteConstants } from '../../assets/SiteValues';
+import { EActiveTab, FormShape } from '../../types';
+import { formatNumber } from '../methods';
+import { FC } from 'react';
 
-export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
+export type PrintPdfProps = {
+  formValues: FormShape;
+  activeTab: EActiveTab;
+};
+
+export const PrintPdf: FC<PrintPdfProps> = ({ formValues, activeTab }) => {
   const today = new Date();
   const day = today.getDate();
   const month = today.getMonth() + 1; // Months are 0-based
   const year = today.getFullYear();
-
+  const CS = CalculationSets[activeTab];
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <Image src={logo} style={styles.logo} />
-        <View style={[styles.section, styles.mtLarge]}>
-          <Text style={styles.header1}>ORIENTAČNÍ ROZPOČET</Text>
-          <Text style={styles.redSubheader}> </Text>
+        <View style={[styles.section]}>
+          <Text style={styles.calculation}>
+            Dotační titul: <Text style={styles.title}>{CS.pdf_titul}</Text>
+          </Text>
         </View>
+        <View style={styles.section}>
+          <Text style={styles.header1}>ORIENTAČNÍ ROZPOČET</Text>
+          <Text style={styles.companySlogan}>{siteConstants.companySlogan}</Text>
+        </View>
+
         <View style={styles.section}>
           <View style={[styles.row, styles.mbMedium]}>
             <View style={styles.column}>
@@ -46,7 +60,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
             </View>
             <View style={[styles.box, styles.width70]}>
               <Text style={[styles.text, styles.textCenter]}>
-                {formValues.strecha ? `${formatNumber(formValues.strecha)} m²` : ''}
+                {formValues.strecha ? `${formValues.strecha} m²` : ''}
               </Text>
             </View>
             <Text style={styles.text}>vata nebo foukaná / stříkaná izolace, záklop / bednění</Text>
@@ -57,7 +71,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
             </View>
             <View style={[styles.box, styles.width70]}>
               <Text style={[styles.text, styles.textCenter]}>
-                {formValues.puda ? `${formatNumber(formValues.puda)} m²` : ''}
+                {formValues.puda ? `${formValues.puda} m²` : ''}
               </Text>
             </View>
             <Text style={styles.text}>vata nebo foukaná / stříkaná izolace</Text>
@@ -68,7 +82,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
             </View>
             <View style={[styles.box, styles.width70]}>
               <Text style={[styles.text, styles.textCenter]}>
-                {formValues.fasada ? `${formatNumber(formValues.fasada)} m²` : ''}
+                {formValues.fasada ? `${formValues.fasada} m²` : ''}
               </Text>
             </View>
             <Text style={styles.text}>lešení, polystyrén / vata, fasádní barva</Text>
@@ -79,7 +93,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
             </View>
             <View style={[styles.box, styles.width70]}>
               <Text style={[styles.text, styles.textCenter]}>
-                {formValues.stineni ? `${formatNumber(formValues.stineni)} m²` : ''}
+                {formValues.stineni ? `${formValues.stineni} m²` : ''}
               </Text>
             </View>
             <Text style={styles.text}>
@@ -92,7 +106,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
             </View>
             <View style={[styles.box, styles.width70]}>
               <Text style={[styles.text, styles.textCenter]}>
-                {formValues.okna ? `${formatNumber(formValues.okna)} m²` : ''}
+                {formValues.okna ? `${formValues.okna} m²` : ''}
               </Text>
             </View>
             <Text style={styles.text}>demontáž, montáž, zednické zapravení</Text>
@@ -103,7 +117,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
             </View>
             <View style={[styles.box, styles.width70]}>
               <Text style={[styles.text, styles.textCenter]}>
-                {formValues.dvere ? `${formatNumber(formValues.dvere)} m²` : ''}
+                {formValues.dvere ? `${formValues.dvere} m²` : ''}
               </Text>
             </View>
             <Text style={styles.text}>demontáž, montáž, zednické zapravení</Text>
@@ -114,7 +128,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
             </View>
             <View style={[styles.box, styles.width70]}>
               <Text style={[styles.text, styles.textCenter]}>
-                {formValues.podlaha ? `${formatNumber(formValues.podlaha)} m²` : ''}
+                {formValues.podlaha ? `${formValues.podlaha} m²` : ''}
               </Text>
             </View>
             <Text style={styles.text}>demontáž, montáž, zednické zapravení</Text>
@@ -125,7 +139,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
             </View>
             <View style={[styles.box, styles.width70]}>
               <Text style={[styles.text, styles.textCenter]}>
-                {formValues.sklep ? `${formatNumber(formValues.sklep)} m²` : ''}
+                {formValues.sklep ? `${formValues.sklep} m²` : ''}
               </Text>
             </View>
             <Text style={styles.text}>lepící malta, polystyrén</Text>
@@ -136,7 +150,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
             </View>
             <View style={[styles.box, styles.width70]}>
               <Text style={[styles.text, styles.textCenter]}>
-                {formValues.stena ? `${formatNumber(formValues.stena)} m²` : ''}
+                {formValues.stena ? `${formValues.stena} m²` : ''}
               </Text>
             </View>
             <Text style={styles.text}>stěna nevytápěného prostoru - vata / polystyren</Text>
@@ -146,7 +160,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
             <Text style={styles.header2}>
               Dotace:{' '}
               <Text style={[styles.bigNumber, styles.bold]}>
-                {formatNumber(Math.min(formValues.dotaceOblastA ?? 0, CONSTS.maxDotaceA))},-
+                {formatNumber(Math.min(formValues.dotaceOblastA ?? 0, CS.maxDotace))}
               </Text>
             </Text>
           </View>
@@ -180,6 +194,18 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
                 {formValues.solary && formValues.nabijeciStanice ? ',  WB 11kW' : ''}
                 {formValues.solary && formValues.infigy ? ', řízení Infigy' : ''}
                 {formValues.solary && formValues.tigo ? ', Tigo' : ''}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.row}>
+            <View style={[styles.box, styles.width100, styles.paddingInlineSmall]}>
+              <Text style={styles.text}>Podlahové Vytápění</Text>
+            </View>
+            <View style={[styles.flex1, styles.paddingInlineSmall]}>
+              <Text style={[styles.text]}>
+                {formValues.podlahoveVytapeni && formValues.podlahoveVytapeniPlocha
+                  ? `Teplovodní systém pro ${formValues.podlahoveVytapeniPlocha} m²`
+                  : ''}
               </Text>
             </View>
           </View>
@@ -220,7 +246,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
             <Text style={styles.header2}>
               Dotace:{' '}
               <Text style={[styles.bigNumber, styles.bold]}>
-                {formatNumber(formValues.dotaceOblastC ?? 0)},-
+                {formatNumber(formValues.dotaceOblastC ?? 0)}
               </Text>
             </Text>
           </View>
@@ -246,7 +272,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
             <Text style={styles.header2}>
               Dotace:{' '}
               <Text style={[styles.bigNumber, styles.bold]}>
-                {formatNumber(formValues.dotaceOblastD ?? 0)},-
+                {formatNumber(formValues.dotaceOblastD ?? 0)}
               </Text>
             </Text>
           </View>
@@ -268,28 +294,27 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
                           0.05
                       : 0
                   )}
-                  ,-
                 </Text>
               </View>
             </View>
-
-            <View style={styles.column}>
-              <Text style={styles.header2}>DĚTI</Text>
-              <View style={[styles.box, styles.paddingSmall]}>
-                <Text style={styles.bigNumber}>
-                  {formatNumber(
-                    (formValues.detiPlna ?? 0) * 50000 + (formValues.detiPolovina ?? 0) * 25000
-                  )}
-                  ,-
-                </Text>
+            {CS.bonus_deti != 0 && (
+              <View style={styles.column}>
+                <Text style={styles.header2}>DĚTI</Text>
+                <View style={[styles.box, styles.paddingSmall]}>
+                  <Text style={styles.bigNumber}>
+                    {formatNumber(
+                      (formValues.detiPlna ?? 0) * CS.bonus_deti +
+                        ((formValues.detiPolovina ?? 0) * CS.bonus_deti) / 2
+                    )}
+                  </Text>
+                </View>
               </View>
-            </View>
-
+            )}
             <View style={styles.column}>
               <Text style={styles.header2}>KOMBINACE</Text>
               <View style={[styles.box, styles.paddingSmall]}>
                 <Text style={styles.bigNumber}>
-                  {formatNumber(formValues.kombinacniBonus ?? 0)},-
+                  {formatNumber(formValues.kombinacniBonus ?? 0)}
                 </Text>
               </View>
             </View>
@@ -305,7 +330,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
               <Text style={styles.header2}>Celková dotace</Text>
               <Text style={styles.subheader}>(součet všech oblastí a bonusů)</Text>
               <View style={[styles.box, styles.paddingSmall]}>
-                <Text style={styles.bigNumber}>{formatNumber(formValues.dotaceTotal ?? 0)},-</Text>
+                <Text style={styles.bigNumber}>{formatNumber(formValues.dotaceTotal ?? 0)}</Text>
               </View>
             </View>
 
@@ -313,7 +338,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
               <Text style={styles.header2}>Předběžná cena</Text>
               <Text style={styles.subheader}>(uvedené částky jsou s DPH a mohou se lišit)</Text>
               <View style={[styles.box, styles.paddingSmall]}>
-                <Text style={styles.bigNumber}>{formatNumber(formValues.costTotal ?? 0)},-</Text>
+                <Text style={styles.bigNumber}>{formatNumber(formValues.costTotal ?? 0)}</Text>
               </View>
             </View>
           </View>
@@ -321,10 +346,10 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
           <View style={[styles.row, styles.mbMedium]}>
             <View style={styles.column}>
               <Text style={styles.header2}>Vlastní investice</Text>
-              <Text style={styles.subheader}>(financování s valstních zdrojů nebo úvěru)</Text>
+              <Text style={styles.subheader}>(financování z vlastních zdrojů nebo úvěru)</Text>
               <View style={[styles.box, styles.paddingSmall]}>
                 <Text style={styles.bigNumber}>
-                  {formatNumber(formValues.costTotalClient ?? 0)},-
+                  {formatNumber(formValues.costTotalClient ?? 0)}
                 </Text>
               </View>
             </View>
@@ -332,9 +357,7 @@ export const PrintPdf = ({ formValues }: { formValues: FormShape }) => {
               <Text style={styles.header2}>Měsíční investice</Text>
               <Text style={styles.subheader}>(při dotované úrokové sazbě 2,99% na 25 let)</Text>
               <View style={[styles.box, styles.paddingSmall]}>
-                <Text style={styles.bigNumber}>
-                  {formatNumber(formValues.monthlyPayment ?? 0)},-
-                </Text>
+                <Text style={styles.bigNumber}>{formatNumber(formValues.monthlyPayment ?? 0)}</Text>
               </View>
             </View>
           </View>

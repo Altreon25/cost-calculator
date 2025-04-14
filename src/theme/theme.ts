@@ -1,6 +1,6 @@
 import { outlinedInputClasses } from '@mui/material';
 import { createTheme } from '@mui/material/styles';
-import { EColors } from '../assets/colors';
+import { EColors } from '../assets/SiteValues';
 
 // 🎨 Define Global Theme
 const theme = createTheme({
@@ -13,7 +13,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: 'Arial, sans-serif',
+    fontFamily: 'Roboto, Arial, sans-serif',
     h6: {
       fontWeight: 600, // Default style for h6
     },
@@ -29,6 +29,38 @@ const theme = createTheme({
         root: {
           textTransform: 'none', // Prevents uppercase text
           borderRadius: 8,
+        },
+      },
+    },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          borderRadius: '8px !important',
+          border: `1px solid ${theme.palette.primary.main}`,
+          color: theme.palette.primary.main,
+          textTransform: 'none',
+          fontWeight: 500,
+          '&.Mui-selected': {
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+            boxShadow:
+              '0px 3px 1px -2px rgba(0, 0, 0, 0.2),' +
+              '0px 2px 2px 0px rgba(0, 0, 0, 0.14),' +
+              '0px 1px 5px 0px rgba(0, 0, 0, 0.12)',
+            '&:hover': {
+              backgroundColor: theme.palette.primary.dark,
+            },
+          },
+        }),
+      },
+    },
+    MuiToggleButtonGroup: {
+      styleOverrides: {
+        grouped: {
+          margin: 0,
+          marginLeft: 16,
+          marginTop: 16,
+          border: `1px solid ${EColors.primary}`,
         },
       },
     },
@@ -92,6 +124,21 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 8,
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          textWrap: 'pretty',
+          whiteSpace: 'normal',
+        },
+      },
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        root: {
+          height: 40,
         },
       },
     },

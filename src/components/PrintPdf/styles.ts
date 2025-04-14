@@ -1,9 +1,24 @@
 import { StyleSheet, Font } from '@react-pdf/renderer';
-import { EColors } from '../../assets/colors';
+import { EColors } from '../../assets/SiteValues';
+import KanitRegular from '../../assets/fonts/kanit/Kanit-Regular.ttf';
+import RobotoRegular from '../../assets/fonts/roboto/Roboto-Regular.ttf';
+import RobotoBold from '../../assets/fonts/roboto/Roboto-Bold.ttf';
+import RobotoItalic from '../../assets/fonts/roboto/Roboto-Italic.ttf';
+import RobotoBoldItalic from '../../assets/fonts/roboto/Roboto-BoldItalic.ttf';
 
 Font.register({
   family: 'Roboto',
-  src: 'https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Me5WZLCzYlKw.ttf',
+  fonts: [
+    { src: RobotoRegular, fontWeight: 'normal', fontStyle: 'normal' },
+    { src: RobotoBold, fontWeight: 'bold', fontStyle: 'normal' },
+    { src: RobotoItalic, fontWeight: 'normal', fontStyle: 'italic' },
+    { src: RobotoBoldItalic, fontWeight: 'bold', fontStyle: 'italic' },
+  ],
+});
+
+Font.register({
+  family: 'Kanit',
+  fonts: [{ src: KanitRegular, fontWeight: 'normal' }],
 });
 
 export const styles = StyleSheet.create({
@@ -24,7 +39,9 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   header1: {
-    fontSize: 18,
+    fontFamily: 'Kanit',
+    letterSpacing: 1.1,
+    fontSize: 20,
     fontWeight: 600,
     textAlign: 'center',
   },
@@ -41,6 +58,9 @@ export const styles = StyleSheet.create({
   text: {
     fontSize: 12,
     fontWeight: 400,
+  },
+  textRight: {
+    textAlign: 'right',
   },
   box: {
     border: 1,
@@ -73,6 +93,9 @@ export const styles = StyleSheet.create({
   mtLarge: {
     marginTop: 20,
   },
+  mlFull: {
+    marginLeft: 'auto',
+  },
   paddingSmall: {
     padding: '5 10',
   },
@@ -98,10 +121,12 @@ export const styles = StyleSheet.create({
   bold: {
     fontWeight: 700,
   },
-  redSubheader: {
-    fontSize: 12,
+  companySlogan: {
+    fontSize: 10,
     color: EColors.primary,
     textAlign: 'center',
+    opacity: 0.3,
+    letterSpacing: 2.2,
   },
   logo: {
     width: 130,
@@ -114,5 +139,12 @@ export const styles = StyleSheet.create({
   },
   flex1: {
     flex: 1,
+  },
+  calculation: {
+    fontSize: 10,
+    textAlign: 'right',
+  },
+  title: {
+    color: EColors.primary,
   },
 });

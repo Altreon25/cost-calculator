@@ -1,13 +1,11 @@
-import { FormShape } from '../types';
-import { destovkaOptions, solaryOptions, vytapeniOptions } from './options';
+import { EActiveTab, FormShape } from '../types';
+import { CalculationSets, CalculationCommon } from './CalculationConstants';
+import { destovkaOptions, solaryOptions, vytapeniOptions, rekuperaceVzdOptions } from './options';
 
-export const CONSTS = {
-  maxDotaceA: 1000000,
-};
-
-export const calculateSubsidy = (formValues: FormShape) => {
+export const calculateSubsidy = (formValues: FormShape, activeTab: EActiveTab) => {
   const newFormValues = { ...formValues };
-
+  const CS = CalculationSets[activeTab];
+  const CC = CalculationCommon;
   // Oblast A
   const facadeArea = formValues.fasada || 0;
   const roofArea = formValues.strecha || 0;
@@ -19,71 +17,77 @@ export const calculateSubsidy = (formValues: FormShape) => {
   const dvereArea = formValues.dvere || 0;
   const shadingArea = formValues.stineni || 0;
 
-  const areaCostClient =
-    (pudaArea + sklepArea + stenaArea) * 2100 +
-    (roofArea + facadeArea) * 1300 +
-    floorArea * 1700 +
-    (windowArea + dvereArea) * 4900 +
-    shadingArea * 2100;
+  const areaTotalCost =
+    (pudaArea + sklepArea + stenaArea) * CC.cost_stena +
+    (roofArea + facadeArea) * CC.cost_strecha +
+    floorArea * CC.cost_podlaha +
+    (windowArea + dvereArea) * CC.cost_okna +
+    shadingArea * CC.cost_stineni;
 
   const areaSubsidyRaw =
-    (pudaArea + sklepArea + stenaArea) * 500 +
-    (roofArea + facadeArea) * 1300 +
-    floorArea * 1700 +
-    (windowArea + dvereArea) * 4900 +
-    shadingArea * 1500;
+    (pudaArea + sklepArea + stenaArea) * CS.dotace_stena +
+    (roofArea + facadeArea) * CS.dotace_strecha +
+    floorArea * CS.dotace_podlaha +
+    (windowArea + dvereArea) * CS.dotace_okna +
+    shadingArea * CS.dotace_stineni;
 
-  const areaSubsidy = Math.min(areaSubsidyRaw, CONSTS.maxDotaceA);
-
-  const areaTotalCost = areaCostClient + areaSubsidy;
+  const areaSubsidy = Math.min(areaSubsidyRaw, CS.maxDotace);
+  // const areaCostClient = areaTotalCost - areaSubsidyRaw;
 
   // Oblast C
-  const rekuperaceVodyTotalCost = formValues.rekuperaceVody ? 130000 : 0;
-  const rekuperaceVodyDotace = formValues.rekuperaceVody ? 50000 : 0;
-  const rekuperaceVodyCostClient = rekuperaceVodyTotalCost - rekuperaceVodyDotace;
+  //Voda
+  const rekuperaceVodyTotalCost = formValues.rekuperaceVody ? CC.cost_rekuperaceVoda : 0;
+  const rekuperaceVodyDotace = formValues.rekuperaceVody ? CC.dotace_rekuperaceVoda : 0;
 
+  //Solary
+  const solarySelectedOption = solaryOptions.find((option) => option.value === formValues.solary);
   const countTigo = formValues.tigo && formValues.solary;
-  const tigoCost = countTigo
-    ? solaryOptions.find((option) => option.value?.toString() === formValues.solary?.toString())
-        ?.tigoSubsidy ?? 0
-    : 0;
+  const tigoCost = countTigo ? solarySelectedOption?.tigoCost ?? 0 : 0;
+  const solaryTotalCost = solarySelectedOption?.cost ?? 0 + tigoCost;
+  const solaryDotace = formValues.solary ? CC.dotace_solary : 0;
+  const wallBoxUnitCost = formValues.nabijeciStanice ? CC.cost_nabijeciStanice : 0;
+  const infigyDotace = formValues.infigy ? CC.dotace_infigy : 0;
+  const infigyTotalCostCost = formValues.infigy ? CC.cost_infigy : 0;
 
-  const solaryTotalCost = formValues.solary ? parseInt(formValues.solary || '0') + tigoCost : 0;
-  const solaryDotace = formValues.solary ? 100000 : 0;
-
-  const solaryCostClient = solaryTotalCost - solaryDotace;
-
-  const wallBoxUnitCost = formValues.nabijeciStanice ? 22000 : 0;
-
-  const wallBoxCostClient = wallBoxUnitCost;
-
-  const infigyDotace = formValues.infigy ? 40000 : 0;
-  const infigyTotalCostCost = formValues.infigy ? 21000 : 0;
-
-  const rekuperaceVzduchuUnitCost = formValues.rekuperaceVzduchu ?? 0;
+  //Vzduch
+  const rekuperaceVzdSelectedOption = rekuperaceVzdOptions.find(
+    ({ value }) => value === formValues.rekuperaceVzduchu
+  );
+  const rekuperaceVzduchuUnitCost = rekuperaceVzdSelectedOption?.cost ?? 0;
   const rekuperaceVzduchuDotace =
-    formValues.rekuperaceVzduchu && formValues.rekuperaceVzduchuMnozstvi ? 90000 : 0;
+    formValues.rekuperaceVzduchu && formValues.rekuperaceVzduchuMnozstvi
+      ? CC.dotace_rekuperaceVzduch
+      : 0;
   const rekuperceVzduchuUnits = formValues.rekuperaceVzduchuMnozstvi ?? 0;
   const rekuperaceVzduchuTotalCost = rekuperaceVzduchuUnitCost * rekuperceVzduchuUnits;
   const rekuperaceVzduchuCostClient = Math.max(
     rekuperaceVzduchuTotalCost - rekuperaceVzduchuDotace,
     0
   );
+  //Podlahove Topeni
+  const podlahoveVytapeniCostClient =
+    formValues.podlahoveVytapeni && formValues.podlahoveVytapeniPlocha
+      ? CC.cost_podlahoveVytapeni * formValues.podlahoveVytapeniPlocha
+      : 0;
 
-  const vytapeniSelectedOption = vytapeniOptions.find(
-    (option) => option.value === formValues.vytapeni
-  );
+  //Vytapeni
+  const vytapeniSelectedOption = vytapeniOptions.find(({ value }) => value === formValues.vytapeni);
   const vytapeniTotalCost = vytapeniSelectedOption?.cost ?? 0;
   const vytapeniDotace = vytapeniSelectedOption?.subsidy ?? 0;
-  const vytapeniCostClient = vytapeniTotalCost - vytapeniDotace;
 
-  const costClientC =
-    rekuperaceVodyCostClient +
-    rekuperaceVzduchuCostClient +
-    solaryCostClient +
-    wallBoxCostClient +
-    vytapeniCostClient +
-    infigyTotalCostCost;
+  // const rekuperaceVodyCostClient = rekuperaceVodyTotalCost - rekuperaceVodyDotace;
+  // const solaryCostClient = solaryTotalCost - solaryDotace;
+  // const wallBoxCostClient = wallBoxUnitCost;
+  // const vytapeniCostClient = vytapeniTotalCost - vytapeniDotace;
+
+  // const costClientC =
+  //   rekuperaceVodyCostClient +
+  //   rekuperaceVzduchuCostClient +
+  //   solaryCostClient +
+  //   wallBoxCostClient +
+  //   vytapeniCostClient +
+  //   podlahoveVytapeniCostClient+
+  //   infigyTotalCostCost;
 
   const dotaceC =
     rekuperaceVodyDotace + rekuperaceVzduchuDotace + solaryDotace + vytapeniDotace + infigyDotace;
@@ -94,37 +98,38 @@ export const calculateSubsidy = (formValues: FormShape) => {
     solaryTotalCost +
     wallBoxUnitCost +
     vytapeniTotalCost +
+    podlahoveVytapeniCostClient +
     infigyTotalCostCost;
 
   // Oblast D
-  const destovkaSelectedOption = destovkaOptions.find(
-    (option) => option.value === formValues.destovka
-  );
+  const destovkaSelectedOption = destovkaOptions.find(({ value }) => value === formValues.destovka);
 
   const destovkaTotalCost = destovkaSelectedOption?.cost ?? 0;
   const destovkaDotace =
-    (destovkaSelectedOption?.subsidy ?? 0) + (destovkaSelectedOption?.cost ? 20000 : 0);
-  const destovkaCostClient = destovkaTotalCost - destovkaDotace;
+    (destovkaSelectedOption?.subsidy ?? 0) +
+    (destovkaSelectedOption?.cost ? CC.dotace_destovka : 0);
+  // const destovkaCostClient = destovkaTotalCost - destovkaDotace;
 
   const kombinacniBonus =
-    (areaCostClient && vytapeniTotalCost ? 50000 : 0) +
-    (areaCostClient && (solaryTotalCost || rekuperaceVodyTotalCost || rekuperaceVzduchuCostClient)
-      ? 50000
+    (areaTotalCost && vytapeniTotalCost ? CS.bonus_kombinace : 0) +
+    (areaTotalCost && (solaryTotalCost || rekuperaceVodyTotalCost || rekuperaceVzduchuCostClient)
+      ? CS.bonus_kombinace
       : 0);
 
-  const bonusDeti = (formValues?.detiPlna ?? 0) * 50000 + (formValues?.detiPolovina ?? 0) * 25000;
+  const bonusDeti =
+    (formValues?.detiPlna ?? 0) * CS.bonus_deti +
+    ((formValues?.detiPolovina ?? 0) * CS.bonus_deti) / 2;
 
   // Update hodnot
   const minimalCostTotal = 0;
   const minimalDotace = 0;
 
-  newFormValues.costClientA = areaCostClient;
+  // newFormValues.costClientA = areaCostClient;
+  // newFormValues.costClientC = costClientC;
+  // newFormValues.costClientD = destovkaCostClient;
+
   newFormValues.dotaceOblastA = areaSubsidy;
-
-  newFormValues.costClientC = costClientC;
   newFormValues.dotaceOblastC = dotaceC;
-
-  newFormValues.costClientD = destovkaCostClient;
   newFormValues.dotaceOblastD = destovkaDotace;
 
   newFormValues.kombinacniBonus = kombinacniBonus;
@@ -133,12 +138,12 @@ export const calculateSubsidy = (formValues: FormShape) => {
     (areaSubsidy + dotaceC + destovkaDotace) * (formValues.obec ? 1.05 : 1) +
       bonusDeti +
       kombinacniBonus +
-      (formValues.addProjectCost ? 50000 : 0),
+      (formValues.addProjectCost ? CS.dotace_projekt : 0),
     minimalDotace
   );
   const totalCost = Math.max(
     (areaTotalCost + costTotalC + destovkaTotalCost) * 1.1 +
-      (formValues.addProjectCost ? 100000 : 0) +
+      (formValues.addProjectCost ? CS.cost_projekt : 0) +
       formValues.customCost,
     minimalCostTotal
   );
@@ -154,8 +159,8 @@ export const calculateSubsidy = (formValues: FormShape) => {
   return newFormValues;
 };
 
-const calculateMonthlyPayment = (formValues: FormShape) => {
-  const loanAmount = formValues.costTotalClient;
+const calculateMonthlyPayment = ({ costTotalClient }: FormShape) => {
+  const loanAmount = costTotalClient;
   const interestRate = 0.0299 / 12;
   const duration = 25;
   const totalPayments = duration * 12;
@@ -171,13 +176,27 @@ const calculateMonthlyPayment = (formValues: FormShape) => {
   return Math.round(monthlyPayment);
 };
 
-export const formatNumber = (value: number | string): string => {
-  if (value === null || value === undefined) return '';
+export const formatNumber = (value: unknown): string => {
+  const num = Number(value);
 
-  const num = typeof value === 'string' ? parseFloat(value) : value;
+  if (isNaN(num)) {
+    return '';
+  } else {
+    return (
+      num.toLocaleString('de-DE', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      }) + ',-'
+    );
+  }
+};
 
-  return num.toLocaleString('de-DE', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  });
+export const formatArea = (value: unknown): string => {
+  const num = Number(value);
+
+  if (isNaN(num)) {
+    return '';
+  } else {
+    return num.toString() + ' m²';
+  }
 };

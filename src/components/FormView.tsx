@@ -10,21 +10,26 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { ChangeEvent, useEffect } from 'react';
+import { ChangeEvent, FC, useEffect } from 'react';
 import { PrintPdfButton } from './PrintPdf/PrintPdfButton';
 import { destovkaOptions, rekuperaceVzdOptions, solaryOptions, vytapeniOptions } from './options';
-import { calculateSubsidy, CONSTS } from './methods';
+import { calculateSubsidy, formatNumber } from './methods';
 import NumberInput from './NumberInput';
-import { FormShape } from '../types';
+import { EActiveTab, FormShape } from '../types';
+import { CalculationCommon, CalculationSets } from './CalculationConstants';
+import { siteConstants } from '../assets/SiteValues';
 import { NumberFormatted } from './NumberFormatted';
 
-export const FormOdpb = ({
-  formValues,
-  setformValues,
-}: {
+export type FormProps = {
   formValues: FormShape;
   setformValues: (formValues: FormShape) => void;
-}) => {
+  activeTab: EActiveTab;
+};
+
+export const FormView: FC<FormProps> = ({ formValues, setformValues, activeTab }) => {
+  const CS = CalculationSets[activeTab];
+  const CC = CalculationCommon;
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -39,7 +44,7 @@ export const FormOdpb = ({
       [name]: valueFormatted,
     };
 
-    setformValues(calculateSubsidy(newformValues));
+    setformValues(calculateSubsidy(newformValues, activeTab));
   };
 
   const handleSelectChange = (e: SelectChangeEvent) => {
@@ -53,7 +58,7 @@ export const FormOdpb = ({
       [name]: value,
     };
 
-    setformValues(calculateSubsidy(newformValues));
+    setformValues(calculateSubsidy(newformValues, activeTab));
   };
 
   const handleSwitchChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -68,32 +73,34 @@ export const FormOdpb = ({
       [name]: checked,
     };
 
-    setformValues(calculateSubsidy(newformValues));
+    setformValues(calculateSubsidy(newformValues, activeTab));
   };
 
   useEffect(() => {
-    setformValues(calculateSubsidy(formValues));
+    setformValues(calculateSubsidy(formValues, activeTab));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activeTab]);
 
   return (
     <form>
       {/* Name Fields */}
       <Grid container spacing={1} mb={1}>
-        <Grid item xs={4} display="flex" justifyContent="center">
-          <FormControlLabel
-            control={
-              <Switch
-                name="addProjectCost"
-                checked={formValues.addProjectCost}
-                onChange={handleSwitchChange}
-              />
-            }
-            label="Projekce"
-          />
+        <Grid item xs={12} md={4} display="flex" justifyContent={{ md: 'center' }}>
+          {CS.cost_projekt != 0 && (
+            <FormControlLabel
+              control={
+                <Switch
+                  name="addProjectCost"
+                  checked={formValues.addProjectCost}
+                  onChange={handleSwitchChange}
+                />
+              }
+              label="Projekce"
+            />
+          )}
         </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <TextField
             label="Jméno klienta"
             name="jmeno"
@@ -102,7 +109,7 @@ export const FormOdpb = ({
           />
         </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <TextField
             label="Příjmení klienta"
             name="prijmeni"
@@ -128,7 +135,7 @@ export const FormOdpb = ({
             name="fasada"
             value={formValues.fasada}
             onChange={handleInputChange}
-            placeholder="m²"
+            placeholder={`${CS.dotace_strecha} m²`}
             suffix=" m²"
           />
         </Grid>
@@ -139,7 +146,7 @@ export const FormOdpb = ({
             name="strecha"
             value={formValues.strecha}
             onChange={handleInputChange}
-            placeholder="m²"
+            placeholder={`${CS.dotace_strecha} m²`}
             suffix=" m²"
           />
         </Grid>
@@ -150,7 +157,7 @@ export const FormOdpb = ({
             name="puda"
             value={formValues.puda}
             onChange={handleInputChange}
-            placeholder="m²"
+            placeholder={`${CS.dotace_stena} m²`}
             suffix=" m²"
           />
         </Grid>
@@ -161,7 +168,7 @@ export const FormOdpb = ({
             name="podlaha"
             value={formValues.podlaha}
             onChange={handleInputChange}
-            placeholder="m²"
+            placeholder={`${CS.dotace_podlaha} m²`}
             suffix=" m²"
           />
         </Grid>
@@ -172,7 +179,7 @@ export const FormOdpb = ({
             name="sklep"
             value={formValues.sklep}
             onChange={handleInputChange}
-            placeholder="m²"
+            placeholder={`${CS.dotace_stena} m²`}
             suffix=" m²"
           />
         </Grid>
@@ -183,7 +190,7 @@ export const FormOdpb = ({
             name="stena"
             value={formValues.stena}
             onChange={handleInputChange}
-            placeholder="m²"
+            placeholder={`${CS.dotace_stena} m²`}
             suffix=" m²"
           />
         </Grid>
@@ -200,7 +207,7 @@ export const FormOdpb = ({
             name="dvere"
             value={formValues.dvere}
             onChange={handleInputChange}
-            placeholder="m²"
+            placeholder={`${CS.dotace_okna} m²`}
             suffix=" m²"
           />
         </Grid>
@@ -211,7 +218,7 @@ export const FormOdpb = ({
             name="okna"
             value={formValues.okna}
             onChange={handleInputChange}
-            placeholder="m²"
+            placeholder={`${CS.dotace_okna} m²`}
             suffix=" m²"
           />
         </Grid>
@@ -222,7 +229,7 @@ export const FormOdpb = ({
             name="stineni"
             value={formValues.stineni}
             onChange={handleInputChange}
-            placeholder="m²"
+            placeholder={`${CS.dotace_stineni} m²`}
             suffix=" m²"
           />
         </Grid>
@@ -231,7 +238,7 @@ export const FormOdpb = ({
           <Typography variant="body1">
             Dotace:{' '}
             <strong>
-              <NumberFormatted value={Math.min(formValues.dotaceOblastA ?? 0, CONSTS.maxDotaceA)} />
+              <NumberFormatted value={formValues.dotaceOblastA ?? 0} />
               ,-
             </strong>
           </Typography>
@@ -261,7 +268,7 @@ export const FormOdpb = ({
             >
               {vytapeniOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+                  {option.label} {formatNumber(option.cost)}
                 </MenuItem>
               ))}
             </Select>
@@ -281,21 +288,21 @@ export const FormOdpb = ({
             >
               {solaryOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+                  {option.label} {formatNumber(option.cost)}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={6} md={4}>
           <FormControlLabel
             control={<Switch name="tigo" checked={formValues.tigo} onChange={handleSwitchChange} />}
             label="TIGO"
           />
         </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={6} md={4}>
           <FormControlLabel
             control={
               <Switch name="infigy" checked={formValues.infigy} onChange={handleSwitchChange} />
@@ -304,7 +311,7 @@ export const FormOdpb = ({
           />
         </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <FormControlLabel
             control={
               <Switch
@@ -313,11 +320,11 @@ export const FormOdpb = ({
                 onChange={handleSwitchChange}
               />
             }
-            label="Wallbox Solax 11 kW"
+            label="Wallbox Solax 11&nbsp;kW"
           />
         </Grid>
 
-        <Grid item xs={9} md={10}>
+        <Grid item xs={12} sm={9} md={10}>
           <FormControl>
             <InputLabel id="rekuperaceVzduchu">Rekuperace vzduchu</InputLabel>
             <Select
@@ -330,14 +337,14 @@ export const FormOdpb = ({
             >
               {rekuperaceVzdOptions.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+                  {option.label} {formatNumber(option.cost)}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </Grid>
 
-        <Grid item xs={3} md={2}>
+        <Grid item xs={12} sm={3} md={2}>
           <NumberInput
             label="Množství"
             name="rekuperaceVzduchuMnozstvi"
@@ -347,7 +354,7 @@ export const FormOdpb = ({
           />
         </Grid>
 
-        <Grid item xs={9} md={10}>
+        <Grid item xs={12} md={4}>
           <FormControlLabel
             control={
               <Switch
@@ -359,6 +366,32 @@ export const FormOdpb = ({
             label="Rekuperace vody"
           />
         </Grid>
+
+        <Grid item xs={12} sm={6} md={4}>
+          <FormControlLabel
+            control={
+              <Switch
+                name="podlahoveVytapeni"
+                checked={formValues.podlahoveVytapeni}
+                onChange={handleSwitchChange}
+              />
+            }
+            label="Podlahové vytápění"
+          />
+        </Grid>
+
+        {formValues.podlahoveVytapeni && (
+          <Grid item xs={12} sm={6} md={4}>
+            <NumberInput
+              label="Plocha"
+              name="podlahoveVytapeniPlocha"
+              value={formValues.podlahoveVytapeniPlocha}
+              onChange={handleInputChange}
+              placeholder={`${CC.cost_podlahoveVytapeni} m²`}
+              suffix=" m²"
+            />
+          </Grid>
+        )}
 
         <Grid item xs={12}>
           <Typography variant="body1">
@@ -415,7 +448,7 @@ export const FormOdpb = ({
       </Typography>
 
       <Grid container spacing={1} mb={10}>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <NumberInput
             label="Kombinační"
             name="kombinacniBonus"
@@ -426,31 +459,44 @@ export const FormOdpb = ({
           />
         </Grid>
 
-        <Grid item xs={3}>
-          <NumberInput
-            label="Děti plná péče"
-            name="detiPlna"
-            value={formValues.detiPlna}
-            onChange={handleInputChange}
-          />
+        <Grid item xs={12} sm={6} md={3}>
+          {CS.bonus_deti != 0 && (
+            <NumberInput
+              label="Děti plná péče"
+              name="detiPlna"
+              value={formValues.detiPlna}
+              onChange={handleInputChange}
+            />
+          )}
         </Grid>
-        <Grid item xs={3}>
-          <NumberInput
-            label="Děti střídavá péče"
-            name="detiPolovina"
-            value={formValues.detiPolovina}
-            onChange={handleInputChange}
-          />
+        <Grid item xs={12} sm={6} md={3}>
+          {CS.bonus_deti != 0 && (
+            <NumberInput
+              label="Děti střídavá péče"
+              name="detiPolovina"
+              value={formValues.detiPolovina}
+              onChange={handleInputChange}
+            />
+          )}
         </Grid>
 
-        <Grid item xs={3} display="flex" justifyContent="center">
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={3}
+          display="flex"
+          justifyContent={{
+            sm: 'center',
+          }}
+        >
           <FormControlLabel
             control={<Switch name="obec" checked={formValues.obec} onChange={handleSwitchChange} />}
             label="Obec"
           />
         </Grid>
 
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <NumberInput
             label="Dotace"
             name="dotaceTotal"
@@ -461,7 +507,7 @@ export const FormOdpb = ({
           />
         </Grid>
 
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <NumberInput
             label="Rozpočet"
             name="costTotal"
@@ -472,17 +518,17 @@ export const FormOdpb = ({
           />
         </Grid>
         {/* Only Altreon allow negative true */}
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <NumberInput
             label="Úprava rozpočtu"
             name="customCost"
             value={formValues.customCost}
             onChange={handleInputChange}
+            allowNegative={siteConstants.allowNegativeCustomCost}
             suffix=",-"
-            allowNegative
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <NumberInput
             label="Doplatek"
             name="costTotalClient"
@@ -493,8 +539,8 @@ export const FormOdpb = ({
           />
         </Grid>
 
-        <Grid item xs={3} marginLeft="auto">
-          <PrintPdfButton formValues={formValues} />
+        <Grid item xs={12} sm={6} md={3} marginLeft="auto" mt={2}>
+          <PrintPdfButton formValues={formValues} activeTab={activeTab} />
         </Grid>
       </Grid>
     </form>
