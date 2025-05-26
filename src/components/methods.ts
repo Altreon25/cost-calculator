@@ -29,7 +29,8 @@ export const calculateSubsidy = (formValues: FormShape, activeTab: EActiveTab) =
     (roofArea + facadeArea) * CS.dotace_strecha +
     floorArea * CS.dotace_podlaha +
     (windowArea + dvereArea) * CS.dotace_okna +
-    shadingArea * CS.dotace_stineni;
+    shadingArea * CS.dotace_stineni+
+    (formValues.addProjectCost ? CS.dotace_projekt : 0);
 
   const areaSubsidy = Math.min(areaSubsidyRaw, CS.maxDotace);
   // const areaCostClient = areaTotalCost - areaSubsidyRaw;
@@ -137,8 +138,7 @@ export const calculateSubsidy = (formValues: FormShape, activeTab: EActiveTab) =
   const totalDotace = Math.max(
     (areaSubsidy + dotaceC + destovkaDotace) * (formValues.obec ? 1.05 : 1) +
       bonusDeti +
-      kombinacniBonus +
-      (formValues.addProjectCost ? CS.dotace_projekt : 0),
+      kombinacniBonus,
     minimalDotace
   );
   const totalCost = Math.max(
