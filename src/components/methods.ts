@@ -43,7 +43,7 @@ export const calculateSubsidy = (formValues: FormShape, activeTab: EActiveTab) =
   const solarySelectedOption = solaryOptions.find((option) => option.value === formValues.solary);
   const countTigo = formValues.tigo && formValues.solary;
   const tigoCost = countTigo ? solarySelectedOption?.tigoCost ?? 0 : 0;
-  const solaryTotalCost = solarySelectedOption?.cost ?? 0 + tigoCost;
+  const solaryTotalCost = (solarySelectedOption?.cost ?? 0) + tigoCost;
   const solaryDotace = formValues.solary ? CC.dotace_solary : 0;
   const wallBoxUnitCost = formValues.nabijeciStanice ? CC.cost_nabijeciStanice : 0;
   const infigyDotace = formValues.infigy ? CC.dotace_infigy : 0;
