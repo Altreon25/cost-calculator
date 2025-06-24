@@ -3,7 +3,7 @@ import { styles } from './styles';
 import { ListItem } from './ListItem';
 import logo from '../../assets/logo.png';
 import { rekuperaceVzdOptions, solaryOptions, vytapeniOptions } from '../options';
-import { CalculationSets } from '../CalculationConstants';
+import { CalculationSets } from '../Constants';
 import { siteConstants } from '../../assets/SiteValues';
 import { EActiveTab, FormShape } from '../../types';
 import { formatNumber } from '../methods';
@@ -20,6 +20,7 @@ export const PrintPdf: FC<PrintPdfProps> = ({ formValues, activeTab }) => {
   const month = today.getMonth() + 1; // Months are 0-based
   const year = today.getFullYear();
   const CS = CalculationSets[activeTab];
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -383,67 +384,22 @@ export const PrintPdf: FC<PrintPdfProps> = ({ formValues, activeTab }) => {
         <View style={styles.section}>
           <Text style={[styles.header1, styles.mbSmall]}>PLATBY</Text>
           <View style={[styles.box, styles.paddingMedium]}>
-            <ListItem>
-              <Text style={styles.text}>
-                Platba č.1 je 50.000, která slouží jako záloha na dotační management, který stojí
-                celkem 100.000,- a je splatná do 5 dnů od podpisu smlouvy. Druhá část je uznatelný
-                náklad v celkové dotaci.
-              </Text>
-            </ListItem>
-            <ListItem>
-              <Text style={styles.text}>
-                Platba č.2 se účtuje tehdy, kdy Vám přijde dotace na účet, kterou budeme chtít
-                zaslat jako zálohu za dílo. Následně se domluví termín a harmonogram realizace a
-                začínáme s rekonstrukcí.
-              </Text>
-            </ListItem>
-            <ListItem>
-              <Text style={styles.text}>
-                Platba č.3 bude doplatek celé ceny díla z vlastních zdrojů či financování, který
-                budeme účtovat ve chvíli, kdy se budeme blížit k půlce realizace (dle harmonogramu)
-                a realizaci dokončujeme.
-              </Text>
-            </ListItem>
+            {CS.platby.map((itemText, index) => (
+              <ListItem key={index}>
+                <Text style={styles.text}>{itemText}</Text>
+              </ListItem>
+            ))}
           </View>
         </View>
 
         <View style={styles.section}>
           <Text style={[styles.header1, styles.mbSmall]}>DOTAČNÍ MANAGEMENT</Text>
           <View style={[styles.box, styles.paddingMedium]}>
-            <ListItem>
-              <Text style={styles.text}>Technické zaměření projektantem </Text>
-            </ListItem>
-            <ListItem>
-              <Text style={styles.text}>Projektová dokumentace původního a budoucího stavu</Text>
-            </ListItem>
-            <ListItem>
-              <Text style={styles.text}>Upřesnění rozpočtu</Text>
-            </ListItem>
-
-            <ListItem>
-              <Text style={styles.text}>Technická zpráva</Text>
-            </ListItem>
-            <ListItem>
-              <Text style={styles.text}>Energetické hodnocení</Text>
-            </ListItem>
-            <ListItem>
-              <Text style={styles.text}>Energetický šítek pro stávající a budoucí stav</Text>
-            </ListItem>
-            <ListItem>
-              <Text style={styles.text}>Vyřízení a podání žádosti na dotaci</Text>
-            </ListItem>
-            <ListItem>
-              <Text style={styles.text}>
-                Vyhotovení zprávy technického odborného dozoru stavby po dokončení stavby pro účely
-                dotace NZÚ
-              </Text>
-            </ListItem>
-            <ListItem>
-              <Text style={styles.text}>
-                Dokončení žádosti NZU po realizaci opatření (kontrola účetnictví k akci a doložení
-                dalších potřebných dokumentů na fond) pro NZÚ
-              </Text>
-            </ListItem>
+            {CS.management.map((itemText, index) => (
+              <ListItem key={index}>
+                <Text style={styles.text}>{itemText}</Text>
+              </ListItem>
+            ))}
           </View>
         </View>
       </Page>

@@ -1,5 +1,5 @@
 import { EActiveTab, FormShape } from '../types';
-import { CalculationSets, CalculationCommon } from './CalculationConstants';
+import { CalculationSets, CalculationCommon } from './Constants';
 import { destovkaOptions, solaryOptions, vytapeniOptions, rekuperaceVzdOptions } from './options';
 
 export const calculateSubsidy = (formValues: FormShape, activeTab: EActiveTab) => {
@@ -29,7 +29,7 @@ export const calculateSubsidy = (formValues: FormShape, activeTab: EActiveTab) =
     (roofArea + facadeArea) * CS.dotace_strecha +
     floorArea * CS.dotace_podlaha +
     (windowArea + dvereArea) * CS.dotace_okna +
-    shadingArea * CS.dotace_stineni+
+    shadingArea * CS.dotace_stineni +
     (formValues.addProjectCost ? CS.dotace_projekt : 0);
 
   const areaSubsidy = Math.min(areaSubsidyRaw, CS.maxDotace);

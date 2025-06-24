@@ -16,7 +16,7 @@ import { destovkaOptions, rekuperaceVzdOptions, solaryOptions, vytapeniOptions }
 import { calculateSubsidy, formatNumber } from './methods';
 import NumberInput from './NumberInput';
 import { EActiveTab, FormShape } from '../types';
-import { CalculationCommon, CalculationSets } from './CalculationConstants';
+import { CalculationCommon, CalculationSets } from './Constants';
 import { siteConstants } from '../assets/SiteValues';
 import { NumberFormatted } from './NumberFormatted';
 
