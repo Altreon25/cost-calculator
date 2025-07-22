@@ -1,9 +1,11 @@
 export const CalculationCommon = {
   //Oblast A
-  cost_stena: 2600, // stena, sklep, puda
-  cost_strecha: 2600, // strecha, fasada
+  cost_stena: 1500, // stena, sklep, puda
+  cost_strecha: 2600,
+  cost_fasada: 2300,
   cost_podlaha: 3400,
-  cost_okna: 9800, // okna, dvere
+  cost_okna: 9800,
+  cost_dvere: 20000,
   cost_stineni: 7500,
 
   //Oblast C

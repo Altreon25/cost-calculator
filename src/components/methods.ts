@@ -19,9 +19,11 @@ export const calculateSubsidy = (formValues: FormShape, activeTab: EActiveTab) =
 
   const areaTotalCost =
     (pudaArea + sklepArea + stenaArea) * CC.cost_stena +
-    (roofArea + facadeArea) * CC.cost_strecha +
+    roofArea * CC.cost_strecha +
+    facadeArea * CC.cost_fasada +
     floorArea * CC.cost_podlaha +
-    (windowArea + dvereArea) * CC.cost_okna +
+    windowArea * CC.cost_okna +
+    dvereArea * CC.cost_dvere +
     shadingArea * CC.cost_stineni;
 
   const areaSubsidyRaw =
@@ -142,7 +144,7 @@ export const calculateSubsidy = (formValues: FormShape, activeTab: EActiveTab) =
     minimalDotace
   );
   const totalCost = Math.max(
-    (areaTotalCost + costTotalC + destovkaTotalCost) * 1.1 +
+    (areaTotalCost + costTotalC + destovkaTotalCost) * 1 +
       (formValues.addProjectCost ? CS.cost_projekt : 0) +
       formValues.customCost,
     minimalCostTotal
